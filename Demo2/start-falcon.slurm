@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# A Slurm batch file is a Bash script with some special comments that start with "#SBATCH".
+# A Slurm batch file is, in short, a Bash script with some special comments that start with "#SBATCH".
 # These special comments are used to specify command-line options for Slurm's "sbatch" command.
 # For more info on what options are available and what they do, see the link below.
 # https://slurm.schedmd.com/sbatch.html
@@ -23,7 +23,7 @@
 # If you don't specify an output file, Slurm will create one that looks like "slurm-1234.out",
 # replacing "1234" with the job number.
 
-#SBATCH --job-name="CSX75-Demo1"
+#SBATCH --job-name="CSX75-Demo2"
 #SBATCH --output="result.out"
 
 #######################################################################################################################
@@ -33,8 +33,8 @@
 # This is in "wall clock" time. I.e., if you ask for 5 minutes and have 5 tasks, the 5 minutes are NOT divided
 # into 1 minute per task (which is different when compared to other resource requests, like using --mem for memory).
 
-#SBATCH --partition=peregrine-cpu
-#SBATCH --qos=cpu_debug
+#SBATCH --partition=peregrine-gpu
+#SBATCH --qos=gpu_debug
 #SBATCH --time=00:05:00
 
 #######################################################################################################################
@@ -42,14 +42,21 @@
 # The descriptions here are how we will interpret them for now,
 # but it's worth noting that they have other interpretations as well,
 # and there are a variety of different ways to specify what you want.
+# Some clusters may have limits on how many resources you can request at a time.
+# For the Falcon resource limits, see the link below.
+# https://sna.cs.colostate.edu/hpc/job-handling/limits/
 
 # Nodes: the number of individual computers to use.
-# Tasks Per Node: the number of processes Slurm will start up per node.
+# GRES: "generic resources" to allocate per node. This requests two NVIDIA A100 40GB GPUs per node.
+# GPU Bind: if and how to map GPUs to tasks. NCCL (communication library used by PyTorch) fails if you bind GPUs.
+# Tasks Per GPU: the number of processes Slurm will start up per GPU.
 # CPUs Per Task: the number of CPU cores used per task. This does not distinguish between threads and processes.
 # Mem Per CPU: the amount of memory to allocate per CPU core (again, either threads or processes).
 
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=4
+#SBATCH --gres=gpu:nvidia_a100_3g.39gb:2
+#SBATCH --gpu-bind=none
+#SBATCH --ntasks-per-gpu=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=500M
 
@@ -77,4 +84,4 @@
 module purge
 module load python/anaconda
 
-srun python DistributedSum.py
+srun python DistributedTraining.py

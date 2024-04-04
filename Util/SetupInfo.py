@@ -15,7 +15,11 @@ class SetupInfo:
     """The number of instances of this script which were started."""
     
     rank: int
-    """A 0-based ID number that uniquely identifies this process from the others."""
+    """A 0-based ID number that uniquely identifies this process from all of the others in the same job."""
+
+    local_rank: int
+    """A 0-based ID number that uniquely identifies this process from the others on the same node,
+    but NOT uniquely from processes on different nodes."""
 
     thread_count: int
     """A number of threads that this process is allowed to use."""
@@ -56,8 +60,9 @@ class SlurmSetup(SetupInfo):
     """Collects the information about how this script was distributed via Slurm."""
     def __init__(self) -> None:
         super().__init__(
-            job_id = self.read_environment('SLURM_JOB_ID'),
-            world_size = self.read_environment('SLURM_NTASKS'),
-            rank = self.read_environment('SLURM_PROCID'),
-            thread_count = self.read_environment('SLURM_CPUS_PER_TASK')
+            job_id=self.read_environment('SLURM_JOB_ID'),
+            world_size=self.read_environment('SLURM_NTASKS'),
+            rank=self.read_environment('SLURM_PROCID'),
+            local_rank=self.read_environment('SLURM_LOCALID'),
+            thread_count=self.read_environment('SLURM_CPUS_PER_TASK')
         )
