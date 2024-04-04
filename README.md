@@ -1,4 +1,4 @@
-# CSX75-HPC-Demo
+# CS475/575 HPC Demo (Lab 6)
 A demonstration on how to use the Falcon HPC cluster at Colorado State University (CSU). This was built for CS475/575 Parallel Programming/Processing Lab 6.
 
 ## CSU Falcon Cluster
