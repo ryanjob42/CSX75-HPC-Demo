@@ -12,10 +12,7 @@ from torch.optim import Adam
 from torch.utils.data import DataLoader, Dataset
 from torch.utils.data.distributed import DistributedSampler
 
-import numpy
-import os
 import torch
-import torch.distributed as distributed
 
 BATCH_SIZE = 40
 EPOCH_COUNT = 3
@@ -51,7 +48,7 @@ class QuadraticData(Dataset):
         (a,b,c,x) = input
         return ((a*x*x) + (b*x) + c).reshape((-1))
 
-class MyNeuralNetowrk(Module):
+class MyNeuralNetwork(Module):
     """The neural network model to train."""
 
     def __init__(self):
@@ -77,7 +74,7 @@ def main() -> None:
     # PyTorch doesn't automatically establish communication, so we have to do it ourselves.
     setup = SlurmSetup()
     print(f'Rank {setup.rank}: starting up.')
-    setup.establish_communication(use_gpus=True)
+    setup.establish_communication()
     print(f'Rank {setup.rank}: communication is ready.')
 
     # All processes create a data loader from our custom quadratic dataset and a distributed sampler.
@@ -93,7 +90,7 @@ def main() -> None:
     # Note: setting find_unused_parameters=True is required for the backward pass (i.e., training).
     # See the link below under the "Forward Pass" bullet for more information.
     # https://pytorch.org/docs/stable/notes/ddp.html#internal-design
-    base_model = MyNeuralNetowrk().to('cuda')
+    base_model = MyNeuralNetwork().to('cuda')
     model = DistributedDataParallel(base_model, find_unused_parameters=True).to('cuda')
 
     # For training, we will need a loss function and an optimizer.

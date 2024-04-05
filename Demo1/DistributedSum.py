@@ -14,7 +14,7 @@ def main() -> None:
     # PyTorch doesn't automatically establish communication, so we have to do it ourselves.
     setup = SlurmSetup()
     print(f'Rank {setup.rank}: starting up.')
-    setup.establish_communication(use_gpus=False)
+    setup.establish_communication()
     print(f'Rank {setup.rank}: communication is ready.')
 
     # For this demo, we will simply have each node compute the sum of a bunch of random numbers.

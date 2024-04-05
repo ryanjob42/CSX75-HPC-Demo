@@ -24,10 +24,8 @@ class SetupInfo:
     thread_count: int
     """A number of threads that this process is allowed to use."""
     
-    def establish_communication(self, use_gpus: bool) -> None:
-        """Establishes communication with the other processes via PyTorch.
-        @use_gpus: Whether or not this script uses GPUs.
-        """
+    def establish_communication(self) -> None:
+        """Establishes communication with the other processes via PyTorch."""
         # We will use a file as a way to establish communication since all systems
         # in the CSU Computer Science department use a common networked file system.
         # It's important to give the file store a unique name, as if the file already exists,
@@ -35,16 +33,12 @@ class SetupInfo:
         # and you'll have to manually kill the job and start over.
         file_store = FileStore(f'filestore-{self.job_id}', self.world_size)
 
-        # If we are using GPUs, then we want to use the NVIDIA Collective Communications
-        # Library (NCCL) since it's designed for inter-GPU communication.
-        # Otherwise, we want to use Gloo as it is more widely supported.
-        # We also need to check if communication could be established (and crash if not).
-        if use_gpus:
-            backend = 'gloo'
-        else:
-            backend = 'gloo'
-
-        dist.init_process_group(backend=backend, store=file_store, rank=self.rank, world_size=self.world_size)
+        # There are two main backends that PyTorch allows: 'nccl' and 'gloo'.
+        # NCCL is the NVIDIA Collective Communications Library, and is designed for
+        # inter-GPU communication. However, it is not currently compatible with
+        # NVIDIA's Multi-Instance GPU (MIG) technology, which the Falcon cluster uses.
+        # Because of this, we will use Gloo, which moves all tensors through the CPU, but always works.
+        dist.init_process_group(backend='gloo', store=file_store, rank=self.rank, world_size=self.world_size)
         if not dist.is_initialized():
             raise ValueError('could not initialize the process group.')
 
