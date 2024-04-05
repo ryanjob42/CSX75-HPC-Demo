@@ -35,7 +35,7 @@ class QuadraticData(Dataset):
         # and all other dimensions to be a single input into the model.
         # For our purpose, we only need two dimensions: one of length "size",
         # and the other of length 4 (for a, b, c, and x respectively).
-        self.inputs = torch.random((size, 4))
+        self.inputs = torch.rand((size, 4))
 
     def __len__(self):
         return self.inputs.shape[0]
