@@ -1,4 +1,8 @@
-from ..Util.SetupInfo import SlurmSetup
+# These first two lines allow us to import classes from Util.
+import sys
+sys.path.append('../Util')
+
+from SetupInfo import SlurmSetup
 
 from dataclasses import dataclass
 from torch import Tensor
@@ -153,3 +157,6 @@ def main() -> None:
         print(f'Rank {setup.rank}: The final loss is: {test_loss}.')
     
     print(f'Rank {setup.rank}: Done training.')
+
+if __name__ == '__main__':
+    main()

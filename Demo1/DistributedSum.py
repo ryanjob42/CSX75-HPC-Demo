@@ -1,4 +1,8 @@
-from ..Util.SetupInfo import SlurmSetup
+# These first two lines allow us to import classes from Util.
+import sys
+sys.path.append('../Util')
+
+from SetupInfo import SlurmSetup
 
 import numpy as np
 import torch.distributed as dist
