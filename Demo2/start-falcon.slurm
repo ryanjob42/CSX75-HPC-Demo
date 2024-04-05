@@ -55,8 +55,7 @@
 
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:nvidia_a100_3g.39gb:2
-#SBATCH --gpu-bind=none
-#SBATCH --ntasks-per-gpu=1
+#SBATCH --ntasks-per-node=2
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=500M
 

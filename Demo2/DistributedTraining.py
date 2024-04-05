@@ -6,7 +6,7 @@ from SetupInfo import SlurmSetup
 
 from dataclasses import dataclass
 from torch import Tensor
-from torch.nn import Linear, Module, NLLLoss, Sequential
+from torch.nn import L1Loss, Linear, Module, Sequential
 from torch.nn.parallel import DistributedDataParallel
 from torch.optim import Adam
 from torch.utils.data import DataLoader, Dataset
@@ -35,7 +35,7 @@ class QuadraticData(Dataset):
         # and all other dimensions to be a single input into the model.
         # For our purpose, we only need two dimensions: one of length "size",
         # and the other of length 4 (for a, b, c, and x respectively).
-        self.inputs = torch.rand((size, 4))
+        self.inputs = torch.rand((size, 4), device='cuda')
 
     def __len__(self):
         return self.inputs.shape[0]
@@ -49,7 +49,7 @@ class QuadraticData(Dataset):
     def compute(self, input: Tensor) -> Tensor:
         """Performs the quadratic computation desired."""
         (a,b,c,x) = input
-        return (a*x*x) + (b*x) + c
+        return ((a*x*x) + (b*x) + c).reshape((-1))
 
 class MyNeuralNetowrk(Module):
     """The neural network model to train."""
@@ -93,14 +93,14 @@ def main() -> None:
     # Note: setting find_unused_parameters=True is required for the backward pass (i.e., training).
     # See the link below under the "Forward Pass" bullet for more information.
     # https://pytorch.org/docs/stable/notes/ddp.html#internal-design
-    base_model = MyNeuralNetowrk().to(setup.local_rank)
-    model = DistributedDataParallel(base_model, find_unused_parameters=True)
+    base_model = MyNeuralNetowrk().to('cuda')
+    model = DistributedDataParallel(base_model, find_unused_parameters=True).to('cuda')
 
     # For training, we will need a loss function and an optimizer.
     # See the links below for different kinds of loss functions and optimizers PyTorch has.
     # https://pytorch.org/docs/stable/nn.html
     # https://pytorch.org/docs/stable/optim.html
-    loss_function = NLLLoss()
+    loss_function = L1Loss()
     optimizer = Adam(model.parameters(), lr=0.001)
 
     # Train the model for the desired number of epochs.
@@ -113,8 +113,8 @@ def main() -> None:
         # Iterate through all batches in the data loader.
         for batch_index, (input_batch, target_batch) in enumerate(data_loader):
             # Send the data to the GPU.
-            input_batch = input_batch.to(setup.local_rank)
-            target_batch = target_batch.to(setup.local_rank)
+            input_batch = input_batch.to('cuda')
+            target_batch = target_batch.to('cuda')
 
             # Clear the gradient from the previous batch and do a forward pass through the model.
             # PyTorch automatically handles the fact that we've put an entire batch of data into the model at once.
@@ -128,8 +128,6 @@ def main() -> None:
             loss_batch.backward()
             optimizer.step()
 
-            print(f'Rank {setup.rank}: completed training batch {batch_index}.')
-        
         print(f'Rank {setup.rank}: completed epoch {epoch}.')
         
         # Save a copy of the model at the end of each epoch.
@@ -152,13 +150,13 @@ def main() -> None:
         with torch.no_grad():
             for input_batch, target_batch in data_loader:
                 # Move our intput and target to the GPU.
-                input_batch = input_batch.to(setup.local_rank)
-                target_batch = target_batch.to(setup.local_rank)
+                input_batch = input_batch.to('cuda')
+                target_batch = target_batch.to('cuda')
                 
                 output_batch = model(input_batch)
 
                 # Calling ".item()" moves the value from the GPU to the CPU.
-                test_loss += loss_function(output_batch, input_batch).item()
+                test_loss += loss_function(output_batch, target_batch).item()
 
         print(f'Rank {setup.rank}: The final loss is: {test_loss}.')
     

@@ -40,7 +40,7 @@ class SetupInfo:
         # Otherwise, we want to use Gloo as it is more widely supported.
         # We also need to check if communication could be established (and crash if not).
         if use_gpus:
-            backend = 'nccl'
+            backend = 'gloo'
         else:
             backend = 'gloo'
 
