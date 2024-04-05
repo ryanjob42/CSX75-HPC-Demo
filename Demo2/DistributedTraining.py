@@ -87,11 +87,8 @@ def main() -> None:
     # All processes create an instance of our model and wrap it in Distributed Data Parallel,
     # which will handle all the distributed communication for us.
     # We'll put it on the GPU with the same ID as this process's local rank (the rank on this node).
-    # Note: setting find_unused_parameters=True is required for the backward pass (i.e., training).
-    # See the link below under the "Forward Pass" bullet for more information.
-    # https://pytorch.org/docs/stable/notes/ddp.html#internal-design
     base_model = MyNeuralNetwork().to('cuda')
-    model = DistributedDataParallel(base_model, find_unused_parameters=True).to('cuda')
+    model = DistributedDataParallel(base_model).to('cuda')
 
     # For training, we will need a loss function and an optimizer.
     # See the links below for different kinds of loss functions and optimizers PyTorch has.
