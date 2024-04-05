@@ -19,7 +19,7 @@ import torch.distributed as distributed
 
 BATCH_SIZE = 40
 EPOCH_COUNT = 3
-TRAIN_DATA_SIZE = 40000
+TRAIN_DATA_SIZE = 4000
 TEST_DATA_SIZE = 80
 
 class QuadraticData(Dataset):
@@ -105,11 +105,13 @@ def main() -> None:
 
     # Train the model for the desired number of epochs.
     for epoch in range(EPOCH_COUNT):
+        print(f'Rank {setup.rank}: starting training epoch {epoch}.')
+
         # Put the model into training mode.
         model.train()
 
         # Iterate through all batches in the data loader.
-        for input_batch, target_batch in data_loader:
+        for batch_index, (input_batch, target_batch) in enumerate(data_loader):
             # Send the data to the GPU.
             input_batch = input_batch.to(setup.local_rank)
             target_batch = target_batch.to(setup.local_rank)
@@ -125,13 +127,17 @@ def main() -> None:
             loss_batch = loss_function(output_batch, target_batch)
             loss_batch.backward()
             optimizer.step()
+
+            print(f'Rank {setup.rank}: completed training batch {batch_index}.')
+        
+        print(f'Rank {setup.rank}: completed epoch {epoch}.')
         
         # Save a copy of the model at the end of each epoch.
         # Only the main process should do this, otherwise all the processes
         # will write to the same file at the same time, corrupting it.
         if setup.is_main_process():
             torch.save(model.state_dict(), f'model_epoch_{epoch}')
-    
+
     # Evaluate the model using a brand new dataset.
     # We'll only do this on the main node, that way we don't have to combine several loss outputs.
     if setup.is_main_process():
