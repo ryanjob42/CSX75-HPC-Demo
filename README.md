@@ -1,5 +1,5 @@
-# CS475/575 HPC Demo (Lab 6)
-A demonstration on how to use the Falcon HPC cluster at Colorado State University (CSU). This was built for CS475/575 Parallel Programming/Processing Lab 6.
+# CS475/575 HPC Demo (Lab 8)
+A demonstration on how to use the Falcon HPC cluster at Colorado State University (CSU). This was built for CS475/575 Parallel Programming/Processing Lab 8.
 
 ## CSU Falcon Cluster
 The Falcon cluster[^falcon] is a high-performance compute (HPC) cluster available through the Computer Science department. This cluster uses a common job scheduling and management system called Slurm[^slurm]. This acts as a way to request system resources for you to use. It then schedules jobs fairly, allowing many people to use the cluster (both simultaneously and over time).
