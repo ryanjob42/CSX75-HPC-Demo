@@ -23,8 +23,8 @@ You can run both of these demos in the same way.
    2. If the above command fails, try: `https://github.com/ryanjob42/CSX75-HPC-Demo.git`
    3. Note: to ensure everything works correctly, please clone the entire repository, and not just individual files.
 3. Navigate into the Demo 1 folder using the `cd` command.
-   1. For demo 1: `cd CSX75-HPC-DEMO/Demo1`
-   2. For demo 2: `cd CSX75-HPC-DEMO/Demo2`
+   1. For demo 1: `cd CSX75-HPC-Demo/Demo1`
+   2. For demo 2: `cd CSX75-HPC-Demo/Demo2`
 4. Launch the demo using the `sbatch` command.
    1. `sbatch start-falcon.slurm`
    2. This command will print your job ID number to the console.
