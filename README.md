@@ -35,6 +35,9 @@ You can run both of these demos in the same way.
 ## Using Other Clusters
 The Falcon cluster has pre-installed all the Python packages you will need for this demo. However, if you use a different cluster, this may not be the case. Luckily, these demos only require two packages: NumPy and PyTorch. You can find instructions on how to install these packages from their websites[^numpy] [^pytorch]. I have also created a [Conda environment file](./environment.yml) that you can use. Conda's website has some excellent instructions on how to manage Conda environments[^conda1], including how to create an environment from a file[^conda2]. If the cluster you are using does not have Python installed at all, the easiest solution is to use Miniconda[^miniconda], which is free and does not require admin privilege to install.
 
+## Notes on Performance
+If you modify either demo to run on a single CPU (or GPU), it will likely run faster. Distributed computing requires adding communication between the processes (or GPUs), which can be very slow. Typically, you would only want to distribute tasks that are large enough where the benefits outweigh the costs. These demos are very small, so the costs far outweigh the benefits.
+
 <!-- References -->
 [^falcon]: CSU Falcon Cluster: https://sna.cs.colostate.edu/hpc/
 [^slurm]: Slurm Workload Manager: https://slurm.schedmd.com/overview.html
