@@ -20,7 +20,7 @@ You can run both of these demos in the same way.
    2. Make sure you're either on campus or using the VPN!
 2. Clone this repository.
    1. `git clone git@github.com:ryanjob42/CSX75-HPC-Demo.git`
-   2. If the above command fails, try: `https://github.com/ryanjob42/CSX75-HPC-Demo.git`
+   2. If the above command fails, try: `git clone https://github.com/ryanjob42/CSX75-HPC-Demo.git`
    3. Note: to ensure everything works correctly, please clone the entire repository, and not just individual files.
 3. Navigate into the Demo 1 folder using the `cd` command.
    1. For demo 1: `cd CSX75-HPC-Demo/Demo1`
