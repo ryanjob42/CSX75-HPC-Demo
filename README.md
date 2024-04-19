@@ -24,7 +24,7 @@ You can run both of these demos in the same way.
    1. For demo 1: `cd CSX75-HPC-DEMO/Demo1`
    2. For demo 2: `cd CSX75-HPC-DEMO/Demo2`
 4. Launch the demo using the `sbatch` command.
-   1. `sbatch falcon-start.slurm`
+   1. `sbatch start-falcon.slurm`
    2. This command will print your job ID number to the console.
 5. Once launched, you can use the `squeue` command to check if your job is waiting, running, or complete.
    1. To see your jobs specifically, you can use `squeue --me`.
