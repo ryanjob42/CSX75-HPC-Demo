@@ -31,6 +31,8 @@ You can run both of these demos in the same way.
    2. If your job is complete, it won't show up.
 6. After the job completes, the outputs will be stored in the file `result.out`.
 
+## Using Other Clusters
+The Falcon cluster has pre-installed all the Python packages you will need for this demo. However, if you use a different cluster, this may not be the case. Luckily, these demos only require two packages: NumPy and PyTorch. You can find instructions on how to install these packages from their websites[^numpy] [^pytorch]. I have also created a [Conda environment file](./environment.yml) that you can use. Conda's website has some excellent instructions on how to manage Conda environments[^conda1], including how to create an environment from a file[^conda2]. If the cluster you are using does not have Python installed at all, the easiest solution is to use Miniconda[^miniconda], which is free and does not require admin privilege to install.
 
 <!-- References -->
 [^falcon]: CSU Falcon Cluster: https://sna.cs.colostate.edu/hpc/
@@ -38,3 +40,8 @@ You can run both of these demos in the same way.
 [^dist]: PyTorch Distributed Communications Library: https://pytorch.org/docs/stable/distributed.html
 [^ddp]: PyTorch Distributed Data Parallel (DDP) Overview: https://pytorch.org/tutorials/intermediate/ddp_tutorial.html
 [^dataset]: PyTorch Datasets and DataLoaders: https://pytorch.org/tutorials/beginner/basics/data_tutorial.html
+[^numpy]: NumPy Website: https://numpy.org/
+[^pytorch]: PyTorch Website: https://pytorch.org/
+[^conda1]: Managing Conda Environments: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
+[^conda2]: Create a Conda Environment from a File: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file
+[^minicondad]: Minicona Website: https://docs.anaconda.com/free/miniconda/index.html
